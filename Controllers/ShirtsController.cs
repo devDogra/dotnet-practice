@@ -1,4 +1,5 @@
 ﻿using Fliu.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -47,24 +48,33 @@ namespace Fliu.Controllers
         }
 
         [HttpPost]
-        public string CreateShirt([FromBody] Shirt shirt)
+        public IActionResult CreateShirt([FromBody][Required] Shirt shirt)
         {
-            System.Console.Clear(); 
-            System.Console.WriteLine(shirt); 
-            return "Creating shirt";
+            return Ok("Shirt created"); 
         }
 
         [HttpDelete("{id}")]
-        public string DeleteShirt([FromRoute] int id)
+        public IActionResult DeleteShirt([FromRoute][Range(0, int.MaxValue)] int id)
         {
-            return $"Deleting shirt {id}";
+            
+            int prevCount = shirts.Count;
+            shirts.RemoveAll(s => s.ShirtId == id);
+            int newCount = shirts.Count;
+            if (prevCount == newCount) return NotFound("No such shirt"); 
+
+            return Ok(new { prevCount, newCount});
         }
 
 
-        [HttpPut("{id}/{flag}")]
-        public string UpdateShirt([FromRoute]int id, [FromRoute]int flag)
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateShirt([FromRoute][Range(0, int.MaxValue)] int id, [FromBody][Required] Shirt? data)
         {
-            return $"Updating shirt {id} with flag: {flag}"; 
+            Shirt? found = shirts.Find(s => s.ShirtId == id);
+            if (found == null) return NotFound("No such shirt");
+            var before = found;
+            var after = data;
+            return Ok(new { before, after });
         }
     }
 

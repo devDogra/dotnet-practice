@@ -7,7 +7,6 @@ namespace Fliu.Models.Validations
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             Shirt? shirt = validationContext.ObjectInstance as Shirt;
-            Console.WriteLine(shirt); 
             
             if (shirt != null && string.IsNullOrEmpty(shirt.Gender) == false)
             {
