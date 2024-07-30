@@ -1,0 +1,11 @@
+packages/
+
+# Glgit obal NuGet packages folder (usually located in user profile)
+.nuget/packages/
+
+# Ignore build output directories
+bin/
+obj/
+
+# Ignore user-specific project files
+*.csproj.user
